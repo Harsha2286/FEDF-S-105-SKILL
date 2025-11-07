@@ -1,0 +1,13 @@
+body
+    {
+        background-color: rgb(76, 181, 144);
+        font-size: 20px;
+    }
+    div
+    {
+        background-color: aqua;
+        font-style: italic;
+        display: ruby-base;
+        padding: 100px;
+        margin: 100px;
+    }

@@ -1,0 +1,8 @@
+Terminal 1 :
+cmd
+cd  "C:\Users\Harsha vardhan\Downloads\mental health\mental health"
+npm run server
+Terminal 2:
+cmd
+cd /d "C:\Users\Harsha vardhan\Downloads\mental health\mental health\client"
+npm start

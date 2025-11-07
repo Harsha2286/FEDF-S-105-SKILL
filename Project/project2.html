@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Assessment Quiz | Complete Web App</title>
+    <meta name="description" content="Comprehensive mental health assessment quiz with 10 randomized questions and detailed analysis.">
+    <meta name="keywords" content="mental health, quiz, assessment, well-being, psychology, self-care">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Floating particles animation */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Main Container */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            max-width: 700px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 45px;
+            position: relative;
+            overflow: hidden;
+            animation: containerSlideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        @keyframes containerSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .web-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            animation: badgePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.1); }
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.15rem;
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 35px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 300% 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: progressShimmer 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes progressShimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressGlide 2s infinite;
+        }
+
+        @keyframes progressGlide {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 12px;
+            color: #495057;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Question Styles */
+        .question-container {
+            margin-bottom: 35px;
+        }
+
+        .question {
+            font-size: 1.4rem;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+            line-height: 1.6;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            border-left: 6px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 100%;
+            animation: questionTop 3s ease-in-out infinite;
+        }
+
+        @keyframes questionTop {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Options Styles */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .option {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 18px;
+            padding: 20px 28px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            color: #495057;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-origin: left center;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .option:hover::before {
+            left: 100%;
+        }
+
+        .option:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+            border-color: #667eea;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .option.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+            animation: checkMark 0.5s ease-in-out;
+        }
+
+        @keyframes checkMark {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        /* Button Styles */
+        .next-btn, .start-btn, .restart-btn, .admin-btn {
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 35px;
+            font-size: 1.15rem;
+            width: 100%;
+            margin-top: 30px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .next-btn:enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .next-btn:enabled:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 22px 50px;
+            font-size: 1.25rem;
+            margin-top: 30px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .admin-btn {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: #333;
+            padding: 18px 35px;
+            font-size: 1.15rem;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+        }
+
+        .admin-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(255, 193, 7, 0.5);
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 16px 32px;
+            font-size: 1.05rem;
+            margin: 0 8px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .restart-btn.share-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Button Wave Effect */
+        .next-btn::before, .start-btn::before, .restart-btn::before, .admin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .next-btn:hover::before, .start-btn:hover::before, .restart-btn:hover::before, .admin-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Screen Styles */
+        .start-screen, .results-screen, .admin-panel-screen {
+            text-align: center;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 25px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(240, 147, 251, 0.05) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .feature-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            color: #495057;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Results Styles */
+        .results {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 40px;
+            border-radius: 25px;
+            margin-top: 30px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .score {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: scoreGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes scoreGlow {
+            0% { filter: brightness(1) drop-shadow(0 0 10px rgba(102, 126, 234, 0.3)); }
+            100% { filter: brightness(1.2) drop-shadow(0 0 20px rgba(102, 126, 234, 0.5)); }
+        }
+
+        .interpretation {
+            font-size: 1.15rem;
+            color: #495057;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 20px;
+            border-left: 5px solid #667eea;
+            text-align: left;
+        }
+        
+        /* New Resource Section Styling */
+        .resource-section {
+            text-align: left;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%);
+            border: 1px solid #cceeff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .resource-section h3 {
+            font-size: 1.5rem;
+            color: #4a69bd;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 2px solid #cceeff;
+            padding-bottom: 10px;
+        }
+        
+        .resource-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .resource-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 1rem;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .resource-item a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .resource-item a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .resource-item .icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #4a69bd;
+        }
+        
+        .resource-item strong {
+            color: #333;
+        }
+
+        /* Virtual Therapy Styling */
+        .virtual-therapy-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .therapy-link {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: #495057;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            width: 150px;
+        }
+
+        .therapy-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .therapy-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            font-size: 0.95rem;
+            color: #856404;
+            text-align: center;
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        .disclaimer strong {
+            color: #6c5700;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .quiz-container {
+                padding: 30px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+                padding: 20px;
+            }
+
+            .option {
+                padding: 16px 22px;
+                font-size: 1rem;
+            }
+
+            .score {
+                font-size: 2.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .restart-btn {
+                margin: 5px 0;
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+
+            .option {
+                padding: 14px 18px;
+                font-size: 0.95rem;
+            }
+
+            .next-btn, .start-btn {
+                padding: 16px 30px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Accessibility Improvements */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus Styles */
+        .option:focus, .next-btn:focus, .start-btn:focus, .restart-btn:focus, .admin-btn:focus {
+            outline: 3px solid rgba(102, 126, 234, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            .quiz-container {
+                background: white;
+                border: 2px solid black;
+            }
+            
+            .option {
+                border: 2px solid black;
+            }
+            
+            .option.selected {
+                background: black;
+                color: white;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .quiz-container {
+                box-shadow: none;
+                border: 1px solid black;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header">
+            <div class="web-badge">Check your mental health status here</div>
+            <h1>🧠 Mental Health Assessment</h1>
+            <p>Comprehensive psychological well-being evaluation tool</p>
+        </div>
+
+        <div id="startScreen" class="start-screen">
+            <h2 style="font-size: 2rem; color: #4a69bd; margin-bottom: 20px;">Student Portal</h2>
+            <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                Welcome! Choose an option below to start your mental health journey.
+            </p>
+            <button class="start-btn" onclick="startQuiz()" aria-label="Begin Mental Health Assessment">
+                🚀 Take Assessment
+            </button>
+            <button class="admin-btn" onclick="showAdminPanel()" aria-label="Open Admin Panel">
+                🔐 Admin Panel
+            </button>
+            
+            <div class="disclaimer">
+                <strong>⚠ Important Medical Disclaimer:</strong><br><br>
+                This assessment is designed for educational and self-reflection purposes only and does not constitute 
+                professional medical advice, diagnosis, or treatment. The results should not be used as a substitute 
+                for professional mental health care. If you are experiencing mental health concerns, suicidal thoughts, 
+                or psychological distress, please consult immediately with a qualified healthcare professional, 
+                licensed therapist, or contact your local emergency services or mental health crisis hotline.
+                <br><br>
+                <strong>Crisis Resources:</strong> National Suicide Prevention Lifeline: 988 | Crisis Text Line: Text HOME to 741741
+            </div>
+        </div>
+
+        <div id="quizScreen" style="display: none;">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">Question 1 of 10</div>
+            </div>
+
+            <div class="question-container">
+                <div class="question" id="question" role="heading" aria-level="2"></div>
+                <div class="options" id="options" role="radiogroup"></div>
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()" disabled aria-label="Continue to next question">
+                    Continue to Next Question ➤
+                </button>
+            </div>
+        </div>
+
+        <div id="resultsScreen" class="results-screen" style="display: none;">
+            <h2 style="color: #333; margin-bottom: 25px; font-size: 2rem;">🎯 Assessment Complete!</h2>
+            <div class="results">
+                <div class="score" id="finalScore" role="status" aria-live="polite"></div>
+                <div class="interpretation" id="interpretation"></div>
+                
+                <div class="button-group">
+                    <button class="restart-btn" onclick="restartQuiz()" aria-label="Retake the assessment">
+                        📊 Retake Assessment
+                    </button>
+                    <button class="restart-btn share-btn" onclick="shareResults()" aria-label="Share your results">
+                        📤 Share Results
+                    </button>
+                    <button class="restart-btn" onclick="downloadResults()" style="background: linear-gradient(135deg, #fd7e14, #e83e8c);" aria-label="Download results as PDF">
+                        💾 Download PDF
+                    </button>
+                </div>
+            </div>
+
+            <div class="resource-section">
+                <h3>Virtual Counseling Hub</h3>
+                <p style="margin-bottom: 20px; line-height: 1.6;">
+                    Connect with a licensed therapist from the comfort of your home. Virtual therapy can provide a flexible and convenient way to get professional support.
+                </p>
+                <div class="virtual-therapy-options">
+                    <a href="https://www.betterhelp.com/" target="_blank" class="therapy-link">
+                        <span class="therapy-icon">🛋️</span>
+                        <span>BetterHelp</span>
+                    </a>
+                    <a href="https://www.talkspace.com/" target="_blank" class="therapy-link">
+                        <span class="therapy-icon">💬</span>
+                        <span>Talkspace</span>
+                    </a>
+                    <a href="https://www.larkr.com/" target="_blank" class="therapy-link">
+                        <span class="therapy-icon">🧘</span>
+                        <span>Larkr</span>
+                    </a>
+                </div>
+                <button class="next-btn" onclick="startVirtualSession()" style="margin-top: 25px; width: auto; padding: 12px 25px; font-size: 1rem; opacity: 1; pointer-events: auto;">
+                    Schedule a Session Now
+                </button>
+            </div>
+            
+            <div class="disclaimer">
+                <strong>🏥 Recommended Next Steps:</strong><br><br>
+                Based on your assessment results, consider the following actions for continued mental health support:
+                <br><br>
+                • <strong>Professional Consultation:</strong> Schedule an appointment with a licensed mental health professional
+                <br>
+                • <strong>Primary Care:</strong> Discuss results with your primary care physician during your next visit
+                <br>
+                • <strong>Support Resources:</strong> Explore local mental health support groups and community resources
+                <br>
+                • <strong>Self-Care:</strong> Implement evidence-based self-care strategies and stress management techniques
+                <br>
+                • <strong>Follow-up:</strong> Retake this assessment periodically to monitor changes in your mental well-being
+                <br><br>
+                Remember: Seeking help for mental health concerns is a sign of strength, not weakness.
+            </div>
+        </div>
+
+        <div id="adminPanel" class="admin-panel-screen" style="display: none;">
+            <h2 style="color: #4a69bd; margin-bottom: 25px; font-size: 2rem;">Admin Panel</h2>
+            <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                Manage the platform's resources and services.
+            </p>
+            <div class="feature-list">
+                <ul>
+                    <li onclick="manageResources()">
+                        <span class="icon">📁</span> Manage Mental Health Resources
+                    </li>
+                    <li onclick="updateServices()">
+                        <span class="icon">⚙️</span> Update Support Services
+                    </li>
+                    <li onclick="manageSessions()">
+                        <span class="icon">📅</span> Manage Counseling Sessions
+                    </li>
+                </ul>
+            </div>
+            <button class="restart-btn" onclick="showStartScreen()" style="background: linear-gradient(135deg, #6c757d, #343a40);">
+                ⬅️ Back to Home
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive Mental Health Assessment Questions
+        const mentalHealthQuestions = [
+            {
+                question: "Over the past two weeks, how often have you felt overwhelmed by daily responsibilities and tasks?",
+                options: [
+                    "Never - I manage all responsibilities easily and feel in control",
+                    "Rarely - Only during particularly busy or stressful periods", 
+                    "Sometimes - A few times per week, but I can usually cope",
+                    "Very often - Almost daily, feeling constantly overwhelmed"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "stress_management"
+            },
+            {
+                question: "How would you rate your sleep quality and consistency over the past two weeks?",
+                options: [
+                    "Excellent - 7-9 hours of restful, uninterrupted sleep nightly",
+                    "Good - Generally adequate sleep with occasional minor disruptions",
+                    "Fair - Frequent sleep difficulties affecting daily functioning", 
+                    "Poor - Severe sleep problems including insomnia or frequent waking"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "sleep_health"
+            },
+            {
+                question: "How frequently do you engage in activities that bring you genuine joy and fulfillment?",
+                options: [
+                    "Daily - I actively prioritize enjoyable and meaningful activities",
+                    "Several times weekly - Regular engagement in pleasurable activities",
+                    "Once a week - Limited time for enjoyable activities",
+                    "Rarely or never - No time or interest in pleasurable activities"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "life_satisfaction"
+            },
+            {
+                question: "How comfortable are you expressing your emotions and feelings to people you trust?",
+                options: [
+                    "Very comfortable - I openly share emotions with trusted individuals",
+                    "Somewhat comfortable - I share with close family or friends when needed",
+                    "Uncomfortable - I prefer to keep my emotions private",
+                    "Very uncomfortable - I avoid emotional expression and vulnerability"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "emotional_expression"
+            },
+            {
+                question: "Over the past two weeks, how often have you experienced feelings of anxiety, worry, or nervousness?",
+                options: [
+                    "Never - I feel consistently calm, relaxed, and at peace",
+                    "Rarely - Only in genuinely stressful or challenging situations",
+                    "Sometimes - Weekly episodes of anxiety or worry",
+                    "Very often - Daily anxiety, worry, or nervous feelings"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "anxiety_levels"
+            },
+            {
+                question: "How satisfied are you with your current personal relationships and social connections?",
+                options: [
+                    "Very satisfied - Strong, supportive, and meaningful relationships",
+                    "Satisfied - Generally positive relationships with good support system",
+                    "Somewhat dissatisfied - Some relationship conflicts or lack of support",
+                    "Very dissatisfied - Poor relationships or significant social isolation"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "social_connections"
+            },
+            {
+                question: "How consistently do you practice self-care activities for your mental and physical well-being?",
+                options: [
+                    "Daily - Self-care is a non-negotiable priority in my routine",
+                    "Several times weekly - Regular self-care practices most of the time",
+                    "Once a week - Occasional self-care when I remember",
+                    "Rarely or never - No time or energy for self-care activities"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "self_care"
+            },
+            {
+                question: "How would you describe your energy levels and motivation throughout a typical day?",
+                options: [
+                    "High and consistent - Energetic, motivated, and productive all day",
+                    "Generally good - Adequate energy and motivation for daily tasks",
+                    "Low but manageable - Often tired but can complete necessary activities",
+                    "Very low - Constantly exhausted, unmotivated, or lacking energy"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "energy_motivation"
+            },
+            {
+                question: "How often do you feel hopeful and optimistic about your future and life prospects?",
+                options: [
+                    "Always - I maintain a consistently positive and hopeful outlook",
+                    "Often - Generally optimistic with occasional doubts",
+                    "Sometimes - Mixed feelings about the future, neither positive nor negative",
+                    "Rarely or never - Persistent pessimism or hopelessness about the future"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "future_outlook"
+            },
+            {
+                question: "How effectively do you handle stress, pressure, and challenging life situations?",
+                options: [
+                    "Very well - I have excellent coping strategies and resilience",
+                    "Well - I generally manage stress adequately with good coping skills",
+                    "With some difficulty - Stress affects me moderately, limited coping strategies",
+                    "Very poorly - Stress and pressure overwhelm me easily, poor coping"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "stress_coping"
+            },
+            {
+                question: "Over the past two weeks, how often have you felt lonely, isolated, or disconnected from others?",
+                options: [
+                    "Never - I feel consistently well-connected and supported",
+                    "Rarely - Only brief moments of loneliness in specific circumstances",
+                    "Sometimes - Regular feelings of loneliness or social disconnection",
+                    "Very often - Frequent or persistent feelings of isolation and loneliness"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "social_isolation"
+            },
+            {
+                question: "How satisfied are you with your current work, studies, or primary daily activities?",
+                options: [
+                    "Very satisfied - Fulfilling, meaningful, and enjoyable activities",
+                    "Satisfied - Generally content with current activities and responsibilities",
+                    "Somewhat dissatisfied - Activities lack meaning or create stress",
+                    "Very dissatisfied - Activities are unfulfilling, stressful, or meaningless"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "life_fulfillment"
+            },
+            {
+                question: "How often do you experience significant mood swings or emotional instability?",
+                options: [
+                    "Never - My emotions and moods remain consistently stable",
+                    "Rarely - Only during major life stressors or hormonal changes",
+                    "Sometimes - Weekly mood fluctuations that affect daily functioning",
+                    "Very often - Daily emotional ups and downs or unpredictable moods"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "emotional_stability"
+            },
+            {
+                question: "How confident do you feel in your ability to cope with life's challenges and unexpected setbacks?",
+                options: [
+                    "Very confident - I trust my resilience and problem-solving abilities",
+                    "Confident - Generally believe I can handle most challenges effectively",
+                    "Somewhat unsure - Challenges sometimes feel overwhelming or unmanageable",
+                    "Not confident - I doubt my ability to handle difficulties or setbacks"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "self_efficacy"
+            },
+            {
+                question: "How often do you feel motivated and driven to pursue your personal goals and aspirations?",
+                options: [
+                    "Always - Highly motivated and actively working toward meaningful goals",
+                    "Often - Generally motivated with clear direction and purpose",
+                    "Sometimes - Inconsistent motivation, unclear goals or direction",
+                    "Rarely or never - Lack of motivation, goals, or sense of life direction"
+                ],
+                scores: [3, 2, 1, 0],
+                category: "goal_orientation"
+            }
+        ];
+
+        // Application State Variables
+        let currentQuestionIndex = 0;
+        let selectedQuestions = [];
+        let userAnswers = [];
+        let totalScore = 0;
+        let startTime = null;
+        let completionTime = null;
+
+        // Utility Functions
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function formatTime(milliseconds) {
+            const seconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return minutes + ':' + remainingSeconds.toString().padStart(2, '0');
+        }
+
+        function saveResultsToStorage(results) {
+            try {
+                const previousResults = JSON.parse(localStorage.getItem('mentalHealthResults') || '[]');
+                previousResults.push(results);
+                // Keep only last 10 results
+                if (previousResults.length > 10) {
+                    previousResults.shift();
+                }
+                localStorage.setItem('mentalHealthResults', JSON.stringify(previousResults));
+            } catch (e) {
+                console.log('Local storage not available');
+            }
+        }
+
+        // Main Application Functions
+        function showStartScreen() {
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function showAdminPanel() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'block';
+        }
+
+        function startQuiz() {
+            startTime = Date.now();
+            
+            // Add loading animation
+            const startBtn = document.querySelector('.start-btn');
+            const originalText = startBtn.innerHTML;
+            startBtn.innerHTML = '🚀 Initializing Assessment<span class="loading"></span>';
+            startBtn.disabled = true;
+            
+            // Analytics tracking
+            trackEvent('quiz_started', {
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent
+            });
+            
+            setTimeout(() => {
+                // Select 10 random questions from the pool
+                selectedQuestions = shuffleArray(mentalHealthQuestions).slice(0, 10);
+                currentQuestionIndex = 0;
+                userAnswers = [];
+                totalScore = 0;
+                
+                // Transition to quiz screen
+                document.getElementById('startScreen').style.display = 'none';
+                document.getElementById('quizScreen').style.display = 'block';
+                
+                displayCurrentQuestion();
+                
+                startBtn.innerHTML = originalText;
+                startBtn.disabled = false;
+            }, 1500);
+        }
+
+        function displayCurrentQuestion() {
+            if (currentQuestionIndex >= selectedQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = selectedQuestions[currentQuestionIndex];
+            
+            // Update question text
+            document.getElementById('question').textContent = currentQuestion.question;
+            
+            // Create option elements
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.options.forEach((optionText, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = optionText;
+                optionElement.setAttribute('role', 'radio');
+                optionElement.setAttribute('aria-checked', 'false');
+                optionElement.setAttribute('tabindex', '0');
+                optionElement.onclick = () => selectOption(index, optionElement);
+                optionElement.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectOption(index, optionElement);
+                    }
+                };
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update progress
+            updateProgressIndicator();
+            
+            // Reset next button
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = true;
+            nextBtn.textContent = currentQuestionIndex === selectedQuestions.length - 1 ? 
+                '🎯 Complete Assessment' : 'Continue to Next Question ➤';
+        }
+
+        function selectOption(optionIndex, optionElement) {
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+                opt.setAttribute('aria-checked', 'false');
+            });
+            
+            // Mark current selection
+            optionElement.classList.add('selected');
+            optionElement.setAttribute('aria-checked', 'true');
+            
+            // Store user's answer
+            userAnswers[currentQuestionIndex] = optionIndex;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+            
+            // Track selection
+            trackEvent('option_selected', {
+                question_index: currentQuestionIndex,
+                option_index: optionIndex,
+                question_category: selectedQuestions[currentQuestionIndex].category
+            });
+        }
+
+        function nextQuestion() {
+            // Calculate score for current question
+            const currentQuestion = selectedQuestions[currentQuestionIndex];
+            const selectedAnswer = userAnswers[currentQuestionIndex];
+            totalScore += currentQuestion.scores[selectedAnswer];
+            
+            // Move to next question
+            currentQuestionIndex++;
+            
+            // Display next question or show results
+            displayCurrentQuestion();
+        }
+
+        function updateProgressIndicator() {
+            const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent =
+                'Question ' + (currentQuestionIndex + 1) + ' of ' + selectedQuestions.length;
+        }
+
+        function showResults() {
+            completionTime = Date.now();
+            const duration = completionTime - startTime;
+            
+            // Transition to results screen
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            
+            // Calculate results
+            const maxPossibleScore = selectedQuestions.length * 3;
+            const percentageScore = Math.round((totalScore / maxPossibleScore) * 100);
+            
+            // Animate score display
+            animateScoreCounter(0, totalScore, maxPossibleScore, percentageScore);
+            
+            // Generate interpretation
+            const interpretation = generateInterpretation(percentageScore, totalScore, maxPossibleScore);
+            
+            setTimeout(() => {
+                document.getElementById('interpretation').innerHTML = interpretation;
+            }, 2000);
+            
+            // Save results
+            const results = {
+                score: totalScore,
+                maxScore: maxPossibleScore,
+                percentage: percentageScore,
+                completionTime: new Date().toISOString(),
+                duration: formatTime(duration),
+                answers: userAnswers.map((answer, index) => ({
+                    question: selectedQuestions[index].question,
+                    selectedOption: selectedQuestions[index].options[answer],
+                    score: selectedQuestions[index].scores[answer],
+                    category: selectedQuestions[index].category
+                }))
+            };
+            
+            saveResultsToStorage(results);
+            
+            // Track completion
+            trackEvent('quiz_completed', {
+                final_score: totalScore,
+                max_score: maxPossibleScore,
+                percentage: percentageScore,
+                completion_time: formatTime(duration)
+            });
+        }
+
+        function animateScoreCounter(start, end, maxScore, percentage) {
+            const duration = 2000;
+            const startTime = performance.now();
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+                
+                const currentScore = Math.floor(start + (end - start) * easeOutCubic);
+                const currentPercentage = Math.round((currentScore / maxScore) * 100);
+                
+                document.getElementById('finalScore').textContent =
+                    currentScore + '/' + maxScore + ' (' + currentPercentage + '%)';
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+
+        function generateInterpretation(percentage, score, maxScore) {
+            let interpretation = '';
+            let recommendations = '';
+            let emoji = '';
+            
+            if (percentage >= 85) {
+                emoji = '🌟';
+                interpretation = '<strong>Excellent Mental Health Status</strong><br><br>Your assessment indicates exceptionally strong mental well-being across multiple dimensions. You demonstrate excellent coping strategies, emotional regulation, and life satisfaction. This suggests you have developed robust psychological resilience and maintain healthy lifestyle patterns that support mental wellness.';
+                recommendations = 'Continue maintaining your excellent mental health practices. Consider mentoring others or sharing your successful strategies. Regular mental health check-ins can help maintain this positive state.';
+            } else if (percentage >= 70) {
+                emoji = '👍';
+                interpretation = '<strong>Good Mental Health Status</strong><br><br>Your assessment shows generally positive mental health with strong foundations in most areas. While you\'re managing well overall, there may be specific areas where targeted improvements could enhance your overall well-being and resilience.';
+                recommendations = 'Focus on strengthening areas that scored lower. Consider stress management techniques, improving sleep hygiene, or enhancing social connections. Professional guidance could help optimize your mental wellness.';
+            } else if (percentage >= 55) {
+                emoji = '⚠';
+                interpretation = '<strong>Moderate Mental Health Concerns</strong><br><br>Your assessment indicates some significant challenges in your mental well-being that warrant attention. While you have strengths in certain areas, several aspects of your mental health could benefit from focused intervention and support.';
+                recommendations = 'Consider speaking with a mental health professional for personalized strategies. Implement evidence-based self-care practices, strengthen your support network, and address specific areas of concern identified in this assessment.';
+            } else if (percentage >= 35) {
+                emoji = '🚨';
+                interpretation = '<strong>Significant Mental Health Concerns</strong><br><br>Your assessment reveals substantial challenges across multiple areas of mental well-being. These results suggest you may be experiencing considerable psychological distress that is significantly impacting your daily functioning and quality of life.';
+                recommendations = 'We strongly recommend seeking professional mental health support immediately. Contact a licensed therapist, counselor, or your healthcare provider. Consider reaching out to mental health crisis resources if you\'re experiencing thoughts of self-harm.';
+            } else {
+                emoji = '🆘';
+                interpretation = '<strong>Severe Mental Health Concerns - Immediate Support Needed</strong><br><br>Your assessment indicates severe mental health challenges that require immediate professional attention. The results suggest significant psychological distress that may be substantially impacting your ability to function in daily life.';
+                recommendations = 'Please seek immediate professional mental health support. Contact emergency services, a crisis hotline, or go to your nearest emergency room if you\'re experiencing thoughts of self-harm or suicide. You don\'t have to face this alone - help is available.';
+            }
+            
+            return (
+                emoji + ' ' + interpretation +
+                '<br><br>' +
+                '<strong>Recommended Actions:</strong><br>' +
+                recommendations +
+                '<br><br>' +
+                '<strong>Assessment Completed:</strong> ' +
+                new Date().toLocaleDateString() + ' at ' + new Date().toLocaleTimeString()
+            );
+        }
+
+        function restartQuiz() {
+            // Reset all variables
+            currentQuestionIndex = 0;
+            selectedQuestions = [];
+            userAnswers = [];
+            totalScore = 0;
+            startTime = null;
+            completionTime = null;
+            
+            // Return to start screen
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            
+            // Track restart
+            trackEvent('quiz_restarted', {
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function shareResults() {
+            const maxScore = selectedQuestions.length * 3;
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            const shareText = `I just completed a comprehensive Mental Health Assessment and scored ${totalScore}/${maxScore} (${percentage}%). Taking care of mental health is crucial for overall well-being! 🧠💚 #MentalHealthAwareness #Wellbeing`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mental Health Assessment Results',
+                    text: shareText,
+                    url: window.location.href
+                }).then(() => {
+                    trackEvent('results_shared', { method: 'native_share' });
+                }).catch(err => {
+                    console.log('Error sharing:', err);
+                    fallbackShare(shareText);
+                });
+            } else {
+                fallbackShare(shareText);
+            }
+        }
+
+        function fallbackShare(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text + ' ' + window.location.href).then(() => {
+                    showNotification('Results copied to clipboard! You can now paste and share.');
+                    trackEvent('results_shared', { method: 'clipboard' });
+                }).catch(() => {
+                    showNotification('Unable to copy to clipboard. Please manually copy your results.');
+                });
+            } else {
+                showNotification('Sharing not supported on this device.');
+            }
+        }
+
+        function downloadResults() {
+            const maxScore = selectedQuestions.length * 3;
+            const percentage = Math.round((totalScore / maxScore) * 100);
+            const completionDate = new Date().toLocaleDateString();
+            const completionTime = new Date().toLocaleTimeString();
+            let pdfContent = 
+'MENTAL HEALTH ASSESSMENT RESULTS\n' +
+'Generated: ' + completionDate + ' at ' + completionTime + '\n\n' +
+'OVERALL SCORE: ' + totalScore + '/' + maxScore + ' (' + percentage + '%)\n\n' +
+'DETAILED RESPONSES:\n';
+
+            userAnswers.forEach(function(answer, index) {
+                const question = selectedQuestions[index];
+                pdfContent +=
+(index + 1) + '. ' + question.question + '\n' +
+'   Selected: ' + question.options[answer] + '\n' +
+'   Score: ' + question.scores[answer] + '/3\n' +
+'   Category: ' + question.category.replace('_', ' ').toUpperCase() + '\n\n';
+            });
+
+            pdfContent +=
+'INTERPRETATION:\n' +
+document.getElementById('interpretation').textContent + '\n\n' +
+'IMPORTANT DISCLAIMER:\n' +
+'This assessment is for educational purposes only and does not constitute professional medical advice. Please consult with a qualified mental health professional for personalized guidance.\n';
+
+            // Create downloadable text file (PDF generation would require external library)
+            const blob = new Blob([pdfContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mental-health-assessment-' + new Date().toISOString().split('T')[0] + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            trackEvent('results_downloaded', {
+                score: totalScore,
+                percentage: percentage
+            });
+        }
+
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-weight: 600;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Simulates a virtual therapy session start
+        function startVirtualSession() {
+            alert('Redirecting you to a partner virtual therapy platform. Please note this is a demonstration and would require a real backend service.');
+            window.open('https://www.betterhelp.com/', '_blank');
+            trackEvent('virtual_session_started');
+        }
+
+        // Admin Panel Functions (placeholders for a real backend system)
+        function manageResources() {
+            alert("Simulating: The 'Manage Resources' panel would allow you to add, edit, or remove mental health resource links and information.");
+            trackEvent('admin_action', { action: 'manage_resources' });
+        }
+
+        function updateServices() {
+            alert("Simulating: The 'Update Services' panel would enable you to change the details of available support services and groups.");
+            trackEvent('admin_action', { action: 'update_services' });
+        }
+
+        function manageSessions() {
+            alert("Simulating: The 'Manage Counseling Sessions' panel would show a list of scheduled therapy sessions and allow for management.");
+            trackEvent('admin_action', { action: 'manage_sessions' });
+        }
+
+        function trackEvent(eventName, eventData = {}) {
+            // Analytics tracking (replace with your preferred analytics service)
+            console.log(`Analytics Event: ${eventName}`, eventData);
+            
+            // Example: Google Analytics 4
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, eventData);
+            }
+            console.log('Analytics Event:', eventName, eventData);
+            // Example: Custom analytics endpoint
+            if (window.customAnalytics) {
+                window.customAnalytics.track(eventName, eventData);
+            }
+        }
+
+        // Keyboard Navigation Support
+        document.addEventListener('keydown', function(event) {
+            // Handle keyboard navigation in quiz
+            if (document.getElementById('quizScreen').style.display !== 'none') {
+                if (event.key === 'Enter') {
+                    const nextBtn = document.getElementById('nextBtn');
+                    if (nextBtn && !nextBtn.disabled) {
+                        nextQuestion();
+                    }
+                }
+                
+                // Number key selection (1-4)
+                const num = parseInt(event.key);
+                if (num >= 1 && num <= 4) {
+                    const options = document.querySelectorAll('.option');
+                    if (options[num - 1]) {
+                        selectOption(num - 1, options[num - 1]);
+                    }
+                }
+            }
+        });
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track page load
+            trackEvent('app_loaded', {
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent,
+                screen_resolution: screen.width + 'x' + screen.height,
+                viewport_size: window.innerWidth + 'x' + window.innerHeight
+            });
+            trackEvent('app_loaded', {
+                timestamp: new Date().toISOString(),
+                user_agent: navigator.userAgent,
+                screen_resolution: screen.width + 'x' + screen.height,
+                viewport_size: window.innerWidth + 'x' + window.innerHeight
+            });
+            console.log('Questions per Assessment: 10 (randomly selected)');
+        });
+
+        // Service Worker Registration (for offline support)
+        if ('serviceWorker' in navigator) {
+            console.log('Total Questions Available:', mentalHealthQuestions.length);
+            console.log('Questions per Assessment: 10 (randomly selected)');
+            console.log('Service Worker support detected');
+        }
+
+        // Performance Monitoring
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                trackEvent('performance_metrics', {
+                    load_time: perfData.loadEventEnd - perfData.loadEventStart,
+                    dom_content_loaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+                    total_load_time: perfData.loadEventEnd - perfData.fetchStart
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>

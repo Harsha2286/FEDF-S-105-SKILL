@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Forms element demo</title>
+    <style>
+        *{
+            background-color: aqua;
+        }
+         buttons{
+            background-color: black;
+
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Welcome to portfolio</h1>
+    <form action="#" method="get" ></form><fieldset>
+    <fieldset>
+        <legend style="text-align: center;">Personal information</legend>
+        <label>FullName:</label><br/>
+    <input type="text" id="name" name="name" placeholder="Enter your full name" required><br/>
+    <label >Email:</label><br/>
+    <input type="text" id="email" name="email" placeholder="Enter email" required><br/>
+     <label >Password:</label><br/>
+    <input type="text" id="password" name="password" ><br/>
+    <label>Date of birth:</label><br/>
+    <input type="date" id="dob" name="dob" required><br/>
+    <label>Website url:</label><br/>
+    <input type="url" id="url" name="url" placeholder="Enter url"><br/>
+    </fieldset>
+    <fieldset>
+        <label>Select gender</label><br/>
+        <legend style="text-align: center;">Preference</legend>
+        <input type="radio" id="male" name="gender"/>
+        <label>Male</label>
+        <input type="radio" id="female" name="gender"/>
+        <label>Female</label><br/>
+        <label>Launguages:</label><br/>
+        <label>Telugu:</label>
+        <input type="checkbox" id="Launguages" name="Launguages"/><br/>
+         <label>English:</label>
+        <input type="checkbox" id="Launguages" name="Launguages"/><br/>
+         <label>Hindi:</label>
+        <input type="checkbox" id="Launguages" name="Launguages"/><br/>
+         <label>Tamil:</label>
+        <input type="checkbox" id="Launguages" name="Launguages"/><br/>
+        <label>Select country:</label>
+        <select id="country">
+            <option value=" ">select country</option>
+            <option value="India">India</option>
+             <option value="England">England</option>
+              <option value="usa">usa</option>
+        </select><br/>
+        <label>About me:</label>
+        <textarea id="aboutme" name="about me" rows="5" placeholder="give introduction about yourself"></textarea>
+    </fieldset>
+    <fieldset>
+        <legend style="text-align: center;">Additional information</legend>
+        <label>Upload a resume</label>
+        <input type="file" id="file" name="file" accept=".pdf"/>
+    </fieldset>
+    <div class="buttons">
+        <input type="submit" value="submit" onclick="alert('submitted')">
+         <input type="reset" value="reset">
+         <input type="button" value="onclick" onclick="alert('button was clicked')">
+    </div>
+    </fieldset>
+</body>
+</html>
